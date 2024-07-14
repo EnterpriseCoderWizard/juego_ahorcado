@@ -33,7 +33,6 @@ Equipo Uno:
 Validación de Entrada del Usuario:
 
     Asegurarse  usuario ingrese solo letras.
-
     El usuario No puede Ingresar dos veces la misma Letra
     Maneja entradas vacías y caracteres no válidos.
 
