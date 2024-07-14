@@ -1,40 +1,8 @@
-package juegoahorcado;/*
-       Mejoras pendientes
-            1- Agregar funcionalidad que solo permita ingresar una palabra
-            2- Dar una pista sobre la palabra (hacer esto opcional si el usuario quiere verlo o no);
-            3- Agregar interface Grafica.
-                3.1- conectar a una base de datos, que se haga click en ver hit, y que muestra la definicion de la palabra
-                     por ejemplo si la palabra es encapsulamiento, que muestre la definicion que este guardada en una base de datos
-
-
-
-
-
-       Borrar esto
-       Juego de Ahorcado en Java
-
-        Este proyecto implementa un simple juego de ahorcado en Java. El usuario debe adivinar una palabra secreta seleccionada aleatoriamente de una lista de palabras predefinidas. El juego proporciona retroalimentación sobre la corrección de las letras adivinadas y permite al usuario jugar múltiples veces si lo desea.
-
-        ## Funcionalidades
-
-        - **Selección Aleatoria de Palabras:** El juego selecciona aleatoriamente una palabra de un array de 25 palabras.
-        - **Interacción con el Usuario:** El juego solicita al usuario que introduzca letras para adivinar la palabra secreta.
-        - **Retroalimentación:** El juego muestra guiones bajos por cada letra no adivinada y reemplaza con la letra correcta si el usuario adivina correctamente.
-        - **Control de Intentos:** El juego permite un número limitado de intentos (5 por defecto) para adivinar la palabra secreta.
-        - **Reinicio del Juego:** Después de ganar o perder, el juego pregunta al usuario si desea jugar de nuevo. Si el usuario responde "sí", el juego se reinicia; de lo contrario, el juego termina.
-
-        ## Uso
-
-        1. **Ejecución del Juego:** El juego se inicia ejecutando la clase `Ahorcado`. El método `main` crea una instancia de la clase y llama al método `jugar`.
-
-        2. **Interacción en la Consola:** El usuario debe seguir las indicaciones en la consola para adivinar la palabra secreta. El usuario puede introducir una letra por intento.
-
-        3. **Reinicio del Juego:** Después de cada partida, se le preguntará al usuario si desea jugar de nuevo. Si responde "sí", el juego se reinicia con una nueva palabra secreta y el contador de intentos se restablece.
-
-*/
-
+package juegoahorcado;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Ahorcado {
 
@@ -56,6 +24,7 @@ public class Ahorcado {
             int intentosMaximos = 5;
             int intentoActual = 0;
             boolean palabraAdivinada = false;
+            Set<Character> letrasUsadas = new HashSet<>();
 
             String palabraSecreta = palabras[random.nextInt(palabras.length)];
             char[] letrasAdivinadas = new char[palabraSecreta.length()];
@@ -70,7 +39,21 @@ public class Ahorcado {
                 System.out.println("Palabra a adivinar: " + String.valueOf(letrasAdivinadas));
                 System.out.println("Introduce una Letra, Por favor");
 
-                char letra = Character.toLowerCase(scanner.next().charAt(0));
+                String input = scanner.nextLine().toLowerCase();
+
+                if (input.isEmpty() || input.length() > 1 || !Character.isLetter(input.charAt(0))) {
+                    System.out.println("Entrada inválida. Por favor, introduce una sola letra.");
+                    continue;
+                }
+
+                char letra = input.charAt(0);
+
+                if (letrasUsadas.contains(letra)) {
+                    System.out.println("Ya has usado esta letra. Prueba con otra diferente.");
+                    continue;
+                }
+
+                letrasUsadas.add(letra);
 
                 boolean letraCorrecta = false;
 
@@ -103,10 +86,14 @@ public class Ahorcado {
             if (respuesta.equalsIgnoreCase("no")) {
                 seguirJugando = false;
             }
+            scanner.nextLine(); // Consumir el salto de línea
         }
 
         scanner.close();
         System.out.println("Gracias por jugar!");
     }
 
+    public static void main(String[] args) {
+        new Ahorcado().jugar();
+    }
 }
